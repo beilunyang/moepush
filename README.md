@@ -32,6 +32,7 @@
 - 企业微信群机器人
 - Telegram 机器人
 - 飞书群机器人
+- Discord Webhook
 
 ## 技术栈
 - **框架**: [Next.js](https://nextjs.org/) (App Router)
