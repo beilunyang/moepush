@@ -62,7 +62,8 @@ function FieldComponent({
 
 // 判断字段是否支持变量插入
 function isVariableSupported(field: TemplateField) {
-  return field.component === 'input' || field.component === 'textarea' || !field.component
+  // return field.component === 'input' || field.component === 'textarea' || !field.component
+  return field.component === 'textarea' || !field.component
 }
 
 export function TemplateFields({ form, template }: TemplateFieldsProps) {
