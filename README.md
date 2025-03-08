@@ -64,6 +64,7 @@ cp .env.example .env
 - `AUTH_SECRET`：加密 Session 的密钥
 - `AUTH_GITHUB_ID`：GitHub OAuth App ID
 - `AUTH_GITHUB_SECRET`：GitHub OAuth App Secret
+- `DISABLE_REGISTER`：是否禁止注册，默认关闭，设置为 `true` 则禁止注册
 
 3. 运行开发服务器：
 
@@ -90,6 +91,7 @@ pnpm run dev
 - `AUTH_GITHUB_ID`：GitHub OAuth App ID
 - `AUTH_GITHUB_SECRET`：GitHub OAuth App Secret
 - `PROJECT_NAME`：项目名称 (可选，默认：moepush)
+- `DISABLE_REGISTER`：是否禁止注册，默认关闭，设置为 `true` 则禁止注册
 
 ## 贡献
 

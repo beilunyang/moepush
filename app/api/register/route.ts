@@ -8,6 +8,12 @@ import { hashPassword } from "@/lib/utils";
 export const runtime = "edge";
 
 export async function POST(request: Request) {
+  if (process.env.DISABLE_REGISTER === "true") {
+    return NextResponse.json(
+      { message: "注册已关闭" },
+      { status: 403 }
+    );
+  }
   try {
     const json = await request.json();
     const { username, password } = authSchema.parse(json);

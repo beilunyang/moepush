@@ -6,6 +6,7 @@ declare global {
     AUTH_SECRET: string;
     AUTH_GITHUB_ID: string;
     AUTH_GITHUB_SECRET: string;
+    DISABLE_REGISTER: string;
   }
 
   type Env = CloudflareEnv
