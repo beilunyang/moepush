@@ -12,14 +12,14 @@ export async function POST(
 ) {
   const { id } = await params
   const body = await request.json()
-  
+
   try {
     const db = await getDb()
-    
+
     const group = await db.query.endpointGroups.findFirst({
       where: eq(endpointGroups.id, id),
     })
-    
+
     if (!group) {
       return NextResponse.json(
         { error: '接口组不存在' },
@@ -33,27 +33,28 @@ export async function POST(
         { status: 403 }
       )
     }
-    
+
     const relations = await db.query.endpointToGroup.findMany({
       where: eq(endpointToGroup.groupId, id),
       with: {
         endpoint: true
       }
     })
-    
+
     const groupEndpoints = relations.map((r: any) => r.endpoint)
-    
+
     if (groupEndpoints.length === 0) {
       return NextResponse.json(
         { error: '接口组不包含任何接口' },
         { status: 400 }
       )
     }
-    
+
     const results = await Promise.allSettled(
       groupEndpoints.map(async (endpoint: any) => {
-        const url = `${request.headers.get('origin')}/api/push/${endpoint.id}`
-        
+        const origin = new URL(request.url).origin
+        const url = `${origin}/api/push/${endpoint.id}`
+
         const response = await fetchWithTimeout(url, {
           method: 'POST',
           headers: {
@@ -62,12 +63,12 @@ export async function POST(
           body: JSON.stringify(body),
           timeout: 10000 // 10秒超时
         })
-        
+
         if (!response.ok) {
           const errorText = await response.text()
           throw new Error(`接口 ${endpoint.name} 返回错误: ${errorText}`)
         }
-        
+
         return {
           endpointId: endpoint.id,
           name: endpoint.name,
@@ -75,10 +76,10 @@ export async function POST(
         }
       })
     )
-    
+
     const successCount = results.filter((r: any) => r.status === 'fulfilled').length
     const failedCount = results.filter((r: any) => r.status === 'rejected').length
-    
+
     return NextResponse.json({
       status: 'success',
       message: `接口组 ${group.name} 处理完成`,
@@ -91,7 +92,7 @@ export async function POST(
         error: r.status === 'rejected' ? r.reason.message : undefined
       }))
     })
-    
+
   } catch (error) {
     console.error('接口组处理错误:', error)
     return NextResponse.json(
